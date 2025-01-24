@@ -49,3 +49,4 @@ RUN cmake llvm \
   -DMLIR_ENABLE_BINDINGS_PYTHON=On \
   -DMLIR_INCLUDE_INTEGRATION_TESTS=On
 RUN cmake --build build -t check-mlir
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
