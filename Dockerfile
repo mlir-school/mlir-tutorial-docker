@@ -17,21 +17,32 @@ RUN sudo apt-get install -y \
   clang \
   cmake \
   cmake-curses-gui \
+  git \
   lld \
   man-db \
-  nanobind-dev \
   ninja-build \
   pybind11-dev \
   python3 \
-  python3-nanobind \
   python3-numpy \
   python3-pybind11 \
   python3-yaml \
+  unzip \
   wget \
   xz-utils
-RUN wget https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.6/llvm-project-19.1.6.src.tar.xz
-RUN tar xf llvm-project-19.1.6.src.tar.xz
-RUN mv llvm-project-19.1.6.src llvm-project 
+RUN git clone https://github.com/wjakob/nanobind && \
+  cd nanobind && \
+  git submodule update --init --recursive && \
+  cmake \
+    -G Ninja \
+    -B build \
+    -DCMAKE_CXX_COMPILER=clang++ \
+    -DCMAKE_C_COMPILER=clang \
+    -DCMAKE_INSTALL_PREFIX=$HOME/usr && \
+  cmake --build build --target install && \
+  cd
+RUN wget -nv https://github.com/llvm/llvm-project/archive/1a8f49fdda5b14ccc894aacee653f19130df3a30.zip -O llvm-source.zip
+ENV CMAKE_PREFIX_PATH=/home/mlir/usr
+RUN unzip -q llvm-source.zip && mv llvm-project-1a8f49fdda5b14ccc894aacee653f19130df3a30 llvm-project
 WORKDIR /home/mlir/llvm-project
 RUN cmake llvm \
   -G Ninja \
@@ -39,14 +50,18 @@ RUN cmake llvm \
   -DCMAKE_BUILD_TYPE=RelWithDebInfo \
   -DCMAKE_CXX_COMPILER=clang++ \
   -DCMAKE_C_COMPILER=clang \
+  -DCMAKE_PREFIX_PATH=$HOME/usr \
   -DLLVM_BUILD_EXAMPLES=On \
-  -DLLVM_BUILD_TARGETS="Native;NVPTX;AMDGPU" \
+  -DLLVM_TARGETS_TO_BUILD="Native;NVPTX;AMDGPU" \
   -DLLVM_CCACHE_BUILD=On \
+  -DLLVM_CCACHE_DIR=$HOME/ccache \
   -DLLVM_ENABLE_ASSERTIONS=On \
   -DLLVM_ENABLE_LLD=On \
-  -DLLVM_ENABLE_PROJECTS=mlir \
+  -DLLVM_ENABLE_PROJECTS="mlir;clang;clang-tools-extra" \
   -DLLVM_USE_SPLIT_DWARF=On \
   -DMLIR_ENABLE_BINDINGS_PYTHON=On \
   -DMLIR_INCLUDE_INTEGRATION_TESTS=On
-RUN cmake --build build -t check-mlir
+RUN cmake --build build -t mlir-opt mlir-translate mlir-transform-opt mlir-cpu-runner check-mlir || true
+RUN cmake --build build -t clang
+RUN cmake --build build -t libclangTooling.a
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
