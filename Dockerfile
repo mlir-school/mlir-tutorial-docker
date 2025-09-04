@@ -14,6 +14,7 @@ RUN sudo apt-get install -y \
   bash-completion \
   ca-certificates \
   ccache \
+  nano \
   clang \
   cmake \
   cmake-curses-gui \
@@ -75,5 +76,5 @@ RUN cmake --build build -t mlir-opt mlir-translate mlir-runner check-mlir instal
 ENV LLVM_PREFIX=/home/mlir/llvm-project/install
 ENV PATH=/home/mlir/.local/bin:$PATH
 ENV PATH=/home/mlir/llvm-project/install/bin:$PATH
-RUN git clone https://gitlab.inria.fr/snoiry/myfirstdialect.git /home/mlir/mlir-list
+RUN git clone https://github.com/ElectrikSpace/mlir-list.git /home/mlir/mlir-list
 WORKDIR /home/mlir/mlir-list
