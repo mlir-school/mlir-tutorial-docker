@@ -45,9 +45,9 @@ RUN git clone https://github.com/wjakob/nanobind && \
   cmake --build build --target install && \
   cd
 ENV CMAKE_PREFIX_PATH=/home/mlir/usr
-RUN wget -nv https://github.com/llvm/llvm-project/archive/4af268c84f530de795f3a221b80d9ca11c06f072.zip -O llvm-source.zip && \
+RUN wget -nv https://github.com/llvm/llvm-project/archive/0263c15f874d4fc33308db93023e583b816b920e.zip -O llvm-source.zip && \
   unzip -q llvm-source.zip && \ 
-  mv llvm-project-4af268c84f530de795f3a221b80d9ca11c06f072 llvm-project && \
+  mv llvm-project-0263c15f874d4fc33308db93023e583b816b920e llvm-project && \
   rm llvm-source.zip
 WORKDIR /home/mlir/llvm-project
 RUN mkdir -p install
