@@ -1,5 +1,22 @@
 # MLIR (Un)School Docker
 
+# Monday: Introduction To MLIR - deep dive
+
+## Installation of the Docker
+
+*Note: To run docker without sudo once you have install it, please follow the post-installation instructions: https://docs.docker.com/engine/install/linux-postinstall/*
+
+You can download a prebuilt docker image by running:
+```
+docker pull electrikspace/mlir-tutorial:debug
+```
+Then you can run the docker and work inside with:
+```
+docker run -it electrikspace/mlir-tutorial:debug
+```
+
+# Tuesday: Define your Dialect
+
 ## Installation
 
 The session is a hand-on where you will actually modify an out-of-tree MLIR project (named *mlir-list*). To build it, you need an environment with prebuilt llvm-project:
@@ -10,11 +27,11 @@ The session is a hand-on where you will actually modify an out-of-tree MLIR proj
 
 This is the simpliest option. You can download a prebuilt docker image by running:
 ```
-docker pull electrikspace/mlir-tutorial
+docker pull electrikspace/mlir-tutorial:v1
 ```
 Then you can run the docker and work inside with:
 ```
-docker run -it electrikspace/mlir-tutorial
+docker run -it electrikspace/mlir-tutorial:v1
 ```
 If you want edit files locally and build with from the docker, we suggest you to clone the project and use the *in-docker* script, which basically run a command inside the docker env.
 ```
