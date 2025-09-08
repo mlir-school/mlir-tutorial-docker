@@ -1,6 +1,7 @@
 FROM ubuntu:24.10
 ARG ENABLE_ASSERTIONS=false
 ARG BUILD_TYPE=Release
+ARG LLVM_VERSION=cff2fdcbc3a53bc3278b459dba3f548fc44b3e98
 ENV TZ=Europe/Paris DEBIAN_FRONTEND=noninteractive
 RUN apt-get update
 RUN apt-get install -y sudo
@@ -47,9 +48,9 @@ RUN git clone https://github.com/wjakob/nanobind && \
   cmake --build build --target install && \
   cd
 ENV CMAKE_PREFIX_PATH=/home/mlir/usr
-RUN wget -nv https://github.com/llvm/llvm-project/archive/0263c15f874d4fc33308db93023e583b816b920e.zip -O llvm-source.zip && \
+RUN wget -nv https://github.com/llvm/llvm-project/archive/$LLVM_VERSION.zip -O llvm-source.zip && \
   unzip -q llvm-source.zip && \ 
-  mv llvm-project-0263c15f874d4fc33308db93023e583b816b920e llvm-project && \
+  mv llvm-project-$LLVM_VERSION llvm-project && \
   rm llvm-source.zip
 WORKDIR /home/mlir/llvm-project
 RUN mkdir -p install
